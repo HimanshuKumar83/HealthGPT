@@ -1,40 +1,43 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from pydantic import PostgresDsn
+from pydantic import Field
+from typing import Optional
 
 
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
+    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
-    PROJECT_NAME: str = "Zentra ML API"
-    ENVIRONMENT: str = "development"
+    PROJECT_NAME: str = "HealthGPT API"
+    ENVIRONMENT: str = "production"
 
-    
-    SECRET_KEY: str = "supersecretkeyforproduction"
+    # Security
+    SECRET_KEY: str = Field(default="super-secret-key-change-me-in-production")
     ALGORITHM: str = "HS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 600
 
-    APP_HOST: str = "127.0.0.1"
+    # Server
+    APP_HOST: str = "0.0.0.0"
     APP_PORT: int = 8000
 
-    DATABASE_URL: str = "postgresql+psycopg://postgres:postgres@localhost:5432/mydb"
+    # Database
+    DATABASE_URL: str = Field(default="postgresql+psycopg://postgres:postgres@localhost:5432/mydb")
 
+    # Redis (Optional)
     REDIS_HOST: str = "localhost"
     REDIS_PORT: int = 6379
     REDIS_PASSWORD: str = ""
 
-    
+    # Gemini
+    GEMINI_API_KEY: str = Field(default="")
+
+    # Mail (Optional)
+    MAIL_USERNAME: Optional[str] = None
+    MAIL_PASSWORD: Optional[str] = None
+    MAIL_FROM: Optional[str] = "info@healthgpt.com"
+    MAIL_FROM_NAME: Optional[str] = "HealthGPT"
+    MAIL_SERVER: Optional[str] = "smtp.gmail.com"
+    MAIL_PORT: Optional[int] = 587
+
+    # ML
     MODEL_DOWNLOAD_URL: str = ""
 
-    
-    GEMINI_API_KEY: str = ""
-
-    
-    MAIL_USERNAME: str = ""
-    MAIL_PASSWORD: str = ""
-    MAIL_FROM: str = "info@healthgpt.com"
-    MAIL_FROM_NAME: str = "HealthGPT"
-    MAIL_SERVER: str = "smtp.gmail.com"
-    MAIL_PORT: int = 587
-
-
-settings = Settings()  # type: ignore
+settings = Settings()
