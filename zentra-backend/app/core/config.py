@@ -2,8 +2,8 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 from typing import Optional
 
 class Settings(BaseSettings):
-    # This tells Pydantic to not crash if extra variables are present
-    model_config = SettingsConfigDict(extra="ignore")
+    # This tells Pydantic to load from .env and ignore extra variables
+    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
     PROJECT_NAME: str = "HealthGPT API"
     ENVIRONMENT: str = "production"
