@@ -1,7 +1,7 @@
 import json
 import time
 from pathlib import Path
-from langchain_google_genai import GoogleGenerativeAIEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_core.documents import Document
 from app.core.config import settings
 import chromadb
@@ -24,20 +24,15 @@ def load_processed_data():
 
 def embed_and_store():
     print("=" * 60)
-    print("Gemini API Embedding Pipeline (Memory Optimized)")
+    print("Local Embedding Pipeline (Reverted for Local Run)")
     print("=" * 60)
-
-    if not settings.GEMINI_API_KEY:
-        print("Error: GEMINI_API_KEY missing!")
-        return
 
     documents = load_processed_data()
     if not documents: return
 
-    # Initialize Gemini Embeddings (API-based, zero local RAM usage)
-    embeddings = GoogleGenerativeAIEmbeddings(
-        model="models/embedding-001",
-        google_api_key=settings.GEMINI_API_KEY
+    # Reverting to Local Embeddings
+    embeddings = HuggingFaceEmbeddings(
+        model_name="sentence-transformers/all-MiniLM-L6-v2"
     )
 
     # Initialize ChromaDB
@@ -48,7 +43,7 @@ def embed_and_store():
     
     collection = chroma_client.create_collection(name="health_knowledge")
     
-    batch_size = 50 # Smaller batches for stability
+    batch_size = 100
     total_docs = len(documents)
     
     print(f"Embedding {total_docs} docs in batches of {batch_size}...")
@@ -64,7 +59,7 @@ def embed_and_store():
         ids = [f"doc_{j}" for j in range(i, i + len(batch))]
         
         try:
-            # Embed via API (No local RAM used)
+            # Local embedding (Uses your computer's power)
             batch_embeddings = embeddings.embed_documents(texts)
             collection.add(
                 embeddings=batch_embeddings,
@@ -73,10 +68,8 @@ def embed_and_store():
                 ids=ids
             )
             print(f"Progress: {i + len(batch)}/{total_docs}")
-            time.sleep(0.5) # Avoid API rate limits
         except Exception as e:
             print(f"Error in batch: {e}")
-            time.sleep(2) # Wait and retry
             continue
 
     print("=" * 60)
