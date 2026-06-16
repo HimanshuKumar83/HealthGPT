@@ -23,30 +23,46 @@ def load_processed_data():
     return documents
 
 def embed_and_store():
+    import os
+    from app.rag.vector_store import embeddings, CHROMA_PATH, COLLECTION_NAME
+
     print("=" * 60)
-    print("Local Embedding Pipeline (Reverted for Local Run)")
+    print("Embedding Pipeline starting...")
     print("=" * 60)
+
+    # 1. Allow skipping database embedding entirely (e.g. if downloading pre-built DB)
+    if os.getenv("SKIP_BUILD_EMBED", "false").lower() == "true":
+        print("⏭️  SKIP_BUILD_EMBED is true. Skipping embedding pipeline.")
+        return
+
+    # 2. Check if database already exists and has documents to avoid unnecessary API usage/time
+    try:
+        chroma_client = chromadb.PersistentClient(path=CHROMA_PATH)
+        collection = chroma_client.get_collection(COLLECTION_NAME)
+        doc_count = collection.count()
+        if doc_count > 0:
+            print(f"✅ ChromaDB collection '{COLLECTION_NAME}' already populated with {doc_count} documents. Skipping embedding pipeline.")
+            return
+    except Exception as e:
+        print(f"No existing collection found or error checking database: {e}. Proceeding with embedding.")
 
     documents = load_processed_data()
-    if not documents: return
+    if not documents: 
+        print("⚠️  No documents found to embed.")
+        return
 
-    # Reverting to Local Embeddings
-    embeddings = HuggingFaceEmbeddings(
-        model_name="sentence-transformers/all-MiniLM-L6-v2"
-    )
-
-    # Initialize ChromaDB
-    chroma_client = chromadb.PersistentClient(path="./chroma_db")
+    chroma_client = chromadb.PersistentClient(path=CHROMA_PATH)
     try:
-        chroma_client.delete_collection("health_knowledge")
+        chroma_client.delete_collection(COLLECTION_NAME)
+        print(f"Cleared existing collection '{COLLECTION_NAME}'")
     except: pass
     
-    collection = chroma_client.create_collection(name="health_knowledge")
+    collection = chroma_client.create_collection(name=COLLECTION_NAME)
     
     batch_size = 100
     total_docs = len(documents)
     
-    print(f"Embedding {total_docs} docs in batches of {batch_size}...")
+    print(f"Embedding {total_docs} docs into '{COLLECTION_NAME}' in batches of {batch_size} using {embeddings.__class__.__name__}...")
     
     for i in range(0, total_docs, batch_size):
         batch = documents[i:i+batch_size]
@@ -59,7 +75,7 @@ def embed_and_store():
         ids = [f"doc_{j}" for j in range(i, i + len(batch))]
         
         try:
-            # Local embedding (Uses your computer's power)
+            # Embedding documents
             batch_embeddings = embeddings.embed_documents(texts)
             collection.add(
                 embeddings=batch_embeddings,

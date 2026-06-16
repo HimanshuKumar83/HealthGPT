@@ -39,14 +39,23 @@ app = FastAPI(
     generate_unique_id_function=lambda route: route.name,
 )
 
+origins = [
+    "http://localhost:5173",  
+    "http://localhost:3000", 
+    "https://zentra-ai.up.railway.app", 
+    "https://zentra-ai-app.vercel.app",
+]
+
+if settings.FRONTEND_URL:
+    origins.append(settings.FRONTEND_URL)
+    if settings.FRONTEND_URL.endswith("/"):
+        origins.append(settings.FRONTEND_URL[:-1])
+    else:
+        origins.append(f"{settings.FRONTEND_URL}/")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173",  
-        "http://localhost:3000", 
-        "https://zentra-ai.up.railway.app", 
-        "https://zentra-ai-app.vercel.app",
-    ],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

@@ -15,7 +15,6 @@ env/
 .idea/
 
 # Model files
-*.pkl
 *.joblib
 
 # Vector Database (ChromaDB) - Binary files, don't push to GitHub

@@ -39,4 +39,7 @@ class Settings(BaseSettings):
     # ML
     MODEL_DOWNLOAD_URL: str = ""
 
+    # Frontend
+    FRONTEND_URL: Optional[str] = None
+
 settings = Settings()
