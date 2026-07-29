@@ -8,6 +8,7 @@ from app.api.auth_router import router as auth_router  # type: ignore
 from app.api.prediction_router import router as prediction_router  # type: ignore
 from app.api.profile_router import router as profile_router  # type: ignore
 from app.api.chat_router import router as chat_router  # type: ignore
+from app.core.config import settings  # type: ignore
 from app.db.database import Base, engine  # type: ignore
 
 

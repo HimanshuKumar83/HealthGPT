@@ -31,4 +31,4 @@ vector_store = Chroma(
     persist_directory=CHROMA_PATH
 )
 
-retriever = vector_store.as_retriever(search_kwargs={"k": 5})
+retriever = vector_store.as_retriever(search_kwargs={"k": int(os.getenv("RAG_TOP_K", "3"))})
