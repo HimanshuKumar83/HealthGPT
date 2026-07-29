@@ -1,262 +1,177 @@
-<div align="center">
+# HealthGPT AI Platform
 
-# 🚀 HealthGPT AI Platform
+A full-stack AI health assistant built with a FastAPI backend and a React + TypeScript frontend. The platform supports authentication, user profile management, health prediction, and AI chat with RAG-powered responses.
 
-### *Intelligent AI Assistant with ML-Powered Analytics*
-
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.109.0-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
-[![Python](https://img.shields.io/badge/Python-3.8+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
-[![scikit-learn](https://img.shields.io/badge/scikit--learn-1.4.0-F7931E?style=for-the-badge&logo=scikit-learn&logoColor=white)](https://scikit-learn.org/)
-[![JWT](https://img.shields.io/badge/JWT-Authentication-000000?style=for-the-badge&logo=JSON%20web%20tokens&logoColor=white)](https://jwt.io/)
-
-**A comprehensive AI platform backend featuring JWT authentication, user profile management, and ML-powered analytics using Random Forest classification.**
-
-</div>
+Contact: himanshukumarsingh454@gmail.com
 
 ---
 
-## 🌟 Overview
+## Overview
 
-**HealthGPT** is a production-ready AI platform backend built with FastAPI, designed to power intelligent chat assistants and ML-driven analytics. The system provides a robust foundation for building conversational AI applications with secure authentication, user management, and machine learning capabilities.
+HealthGPT combines:
+- a secure backend for authentication, profile handling, and prediction APIs
+- a modern web frontend for onboarding, dashboards, results, and account management
+- AI-powered chat and retrieval-based health knowledge support
 
-### Core Capabilities
-
-- **JWT Authentication** - Secure token-based authentication with password reset functionality
-- **User Profile System** - Comprehensive user data management with automatic validation
-- **ML Inference Pipeline** - Random Forest classifier with 95%+ accuracy for predictive analytics
-- **Prediction History** - Automatic tracking and storage of all ML predictions
-- **PostgreSQL Database** - Production-grade relational database with SQLAlchemy ORM
-- **Email Integration** - Transactional emails via Resend API
-- **Interactive API Documentation** - Auto-generated Scalar documentation
+This project is designed to provide a smooth experience for users who want health insights, wellness tracking, and AI-guided support in one place.
 
 ---
 
-## 📁 Project Structure
+## Features
+
+### Backend
+- JWT-based authentication and authorization
+- User profile creation and updates
+- ML-based health prediction workflow
+- Chat and RAG-based AI assistant support
+- PostgreSQL database integration
+- Redis support for caching and session-related needs
+- Alembic migrations for database management
+
+### Frontend
+- React + TypeScript single-page application
+- Vite-based fast development and build workflow
+- Tailwind CSS-based modern UI
+- Authentication pages and protected routes
+- Onboarding, dashboard, results, account, and profile screens
+- Responsive layout for desktop and mobile screens
+
+---
+
+## Tech Stack
+
+### Backend
+- Python
+- FastAPI
+- Uvicorn
+- SQLAlchemy
+- PostgreSQL
+- Alembic
+- Redis
+- Pydantic
+- scikit-learn
+- pandas / numpy
+- Chroma / LangChain / Gemini / OpenAI integrations
+
+### Frontend
+- React
+- TypeScript
+- Vite
+- Tailwind CSS
+- React Router
+- Zustand
+- Axios
+- Framer Motion
+- Lucide Icons
+
+---
+
+## Project Structure
 
 ```bash
-zentra/
-├── backend/                        # FastAPI Backend
+HealthGPT2/
+├── zentra-backend/           # FastAPI backend
 │   ├── app/
-│   │   ├── api/                   # API Route Handlers
-│   │   │   ├── auth_router.py     # 🔐 Authentication endpoints
-│   │   │   ├── profile_router.py  # 👤 User profile CRUD operations
-│   │   │   └── prediction_router.py # 🤖 ML prediction endpoint
-│   │   │
-│   │   ├── core/                  # Core Configuration
-│   │   │   ├── config.py          # Environment settings
-│   │   │   ├── security.py        # JWT & password utilities
-│   │   │   ├── hashing.py         # Password hash wrapper
-│   │   │   ├── dependencies.py    # Auth dependencies
-│   │   │   └── email_utils.py     # Email service integration
-│   │   │
-│   │   ├── db/                    # Database Layer
-│   │   │   ├── database.py        # SQLAlchemy engine & sessions
-│   │   │   └── models.py          # ORM models (User, Profile, Predictions)
-│   │   │
-│   │   ├── ml/                    # Machine Learning
-│   │   │   ├── inference_pipeline.py      # Prediction logic
-│   │   │   ├── random_forest_model.pkl    # Trained RF classifier (7.9 MB)
-│   │   │   ├── label_encoders.pkl         # Categorical encoders
-│   │   │   ├── robust_scaler.pkl          # Feature scaler
-│   │   │   ├── target_label_encoder.pkl   # Target encoder
-│   │   │   └── feature_columns.pkl        # Feature names
-│   │   │
-│   │   ├── schemas/               # Pydantic Schemas
-│   │   │   ├── auth.py            # Auth request/response models
-│   │   │   ├── profile.py         # Profile CRUD schemas
-│   │   │   └── predict.py         # Prediction schemas
-│   │   │
-│   │   ├── services/              # Business Logic
-│   │   │   └── auth_service.py    # User creation & authentication
-│   │   │
-│   │   └── main.py                # 🚀 FastAPI application entry
-│   │
-│   ├── .env                       # Environment variables (not tracked)
-│   ├── .gitignore
-│   ├── requirements.txt           # Python dependencies
-│   ├── create_tables.py           # Database initialization script
-│   └── README.md
+│   │   ├── api/
+│   │   ├── core/
+│   │   ├── db/
+│   │   ├── ml/
+│   │   ├── rag/
+│   │   └── services/
+│   ├── migrations/
+│   ├── requirements.txt
+│   └── render.yaml
 │
-├── modelnb/                       # ML Development & Training
-│   ├── eda.ipynb                  # Exploratory Data Analysis
-│   ├── feature_engineering.ipynb  # Feature engineering experiments
-│   ├── model_Training.ipynb       # Model training & evaluation
-│   ├── inference_pipeline.py      # Standalone inference script
-│   ├── ObesityDataSet_raw_and_data_sinthetic.csv
-│   ├── obesity_data_cleaned.csv
-│   ├── obesity_data_preprocessed.csv
-│   └── models/                    # Trained model artifacts
-│
-└── test.py                        # Quick prediction test script
+└── zentra-ui/               # React frontend
+    ├── src/
+    ├── public/
+    ├── package.json
+    └── vite.config.ts
 ```
 
 ---
 
-## 💡 Key Features
-
-<table>
-<tr>
-<td width="50%">
-
-### 🔐 Authentication & Security
-- Email-based user registration
-- JWT token generation and validation
-- Secure password hashing with bcrypt
-- Token-based password reset flow
-- Protected route middleware
-- Stateless session management
-
-</td>
-<td width="50%">
-
-### 👤 User Management
-- Create and update user profiles
-- Automatic data validation
-- BMI auto-calculation
-- Profile retrieval endpoints
-- Comprehensive user metrics (15+ fields)
-- Timestamp tracking
-
-</td>
-</tr>
-<tr>
-<td width="50%">
-
-### 🤖 Machine Learning
-- Random Forest classifier (95%+ accuracy)
-- 7-category classification system
-- Real-time inference pipeline
-- Automated preprocessing (encoding, scaling)
-- Model artifact serialization
-- Prediction history logging
-
-</td>
-<td width="50%">
-
-### 🗄️ Database Architecture
-- PostgreSQL with SQLAlchemy ORM
-- User authentication model
-- User health profile model
-- Prediction history model
-- Password reset token model
-- Alembic migration support
-
-</td>
-</tr>
-</table>
-
----
-
-## 🛠️ Technology Stack
-
-### Backend Framework
-| Component | Technology | Version |
-|-----------|-----------|---------|
-| Web Framework | FastAPI | 0.109.0 |
-| ASGI Server | Uvicorn | 0.27.0 |
-| API Documentation | Scalar FastAPI | 1.0.3 |
-
-### Database & ORM
-| Component | Technology | Version |
-|-----------|-----------|---------|
-| Database | PostgreSQL | Latest |
-| ORM | SQLAlchemy | 2.0.25 |
-| Migrations | Alembic | 1.13.1 |
-| Driver | psycopg2-binary | 2.9.9 |
-
-### Security
-| Component | Technology | Version |
-|-----------|-----------|---------|
-| JWT | python-jose[cryptography] | 3.3.0 |
-| Password Hashing | passlib[bcrypt] | 1.7.4 |
-| Email Service | Resend | 0.8.0 |
-
-### Machine Learning
-| Component | Technology | Version |
-|-----------|-----------|---------|
-| ML Framework | scikit-learn | 1.4.0 |
-| Data Processing | pandas | 2.2.0 |
-| Numerical Computing | numpy | 1.26.3 |
-| Model Serialization | joblib | 1.3.2 |
-
-### Data Validation
-| Component | Technology | Version |
-|-----------|-----------|---------|
-| Schema Validation | Pydantic | 2.5.3 |
-| Settings Management | pydantic-settings | 2.1.0 |
-| Email Validation | email-validator | 2.1.0 |
-
----
-
-## 🚀 Quick Start
+## Backend Setup
 
 ### Prerequisites
+- Python 3.10+
+- PostgreSQL
+- Redis (optional but recommended)
 
-- Python 3.8+
-- PostgreSQL database
-- pip package manager
-- Virtual environment (recommended)
-
-### Installation Steps
-
-**1. Navigate to Backend Directory**
+### Install dependencies
 ```bash
-cd backend
-```
-
-**2. Create Virtual Environment**
-```bash
-# Windows
+cd zentra-backend
 python -m venv venv
 venv\Scripts\activate
-
-# macOS/Linux
-python3 -m venv venv
-source venv/bin/activate
-```
-
-**3. Install Dependencies**
-```bash
 pip install -r requirements.txt
 ```
 
-**4. Configure Environment Variables**
-
-Create `.env` file in `backend/` directory:
+### Environment variables
+Create a `.env` file in the backend folder with values such as:
 
 ```env
-# Application
-PROJECT_NAME="HealthGPT AI Platform"
-ENVIRONMENT="development"
-APP_HOST="127.0.0.1"
-APP_PORT=8000
-
-# Security
-SECRET_KEY="your-secret-key-here"  # Generate with: openssl rand -hex 32
-ALGORITHM="HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES=60
-
-# Database
-DATABASE_URL="postgresql://username:password@localhost:5432/zentra_db"
-
-# Email (Optional)
-RESEND_API_KEY="your-resend-api-key"
+DATABASE_URL=postgresql://username:password@localhost:5432/your_db
+SECRET_KEY=your-secret-key
+ALGORITHM=HS256
+GEMINI_API_KEY=your-gemini-key
+REDIS_HOST=localhost
+REDIS_PORT=6379
+REDIS_PASSWORD=
 ```
 
-**5. Initialize Database**
-```bash
-# Automatic table creation
-python create_tables.py
-
-# OR use Alembic migrations (production)
-alembic upgrade head
-```
-
-**6. Run Application**
+### Run backend
 ```bash
 uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
 ```
+
+---
+
+## Frontend Setup
+
+### Prerequisites
+- Node.js 18+
+- npm
+
+### Install dependencies
+```bash
+cd zentra-ui
+npm install
+```
+
+### Run frontend
+```bash
+npm run dev
+```
+
+### Frontend environment variable
+Create a `.env.local` file inside the frontend folder:
+
+```env
+VITE_API_BASE_URL=http://127.0.0.1:8000
+```
+
+---
+
+## Deployment
+
+### Backend
+- Recommended: Render
+- Use the backend folder as the deployment root
+- Set the runtime environment to Python
+- Provide the required environment variables for database, secret key, and API keys
+
+### Frontend
+- Recommended: Vercel
+- Build command: `npm run build`
+- Output directory: `dist`
+- Set `VITE_API_BASE_URL` to your deployed backend URL
+
+---
+
+## Contact
+
+For questions, collaboration, or deployment support:
+- Email: himanshukumarsingh454@gmail.com
 
 **7. Access API Documentation**
 - **Scalar Docs**: http://127.0.0.1:8000/scalar
@@ -544,7 +459,7 @@ mypy app/
 
 ## 📞 Contact
 
-- **Email**: fahadkhanf715@gmail.com
+- **Email**: himanshukumarsingh454@gmail.com
 - **GitHub Issues**: [Create an issue](https://github.com/yourusername/zentra/issues)
 - **Documentation**: http://127.0.0.1:8000/scalar
 
