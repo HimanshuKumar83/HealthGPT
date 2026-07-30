@@ -411,37 +411,12 @@ curl -X POST "http://127.0.0.1:8000/predict/" \
 
 ---
 
-## 🧪 Development
 
-### Testing
 
-```bash
-pip install pytest pytest-asyncio httpx
-pytest
-pytest --cov=app --cov-report=html
-```
-
-### Database Migrations
-
-```bash
-alembic revision --autogenerate -m "Description"
-alembic upgrade head
-alembic downgrade -1
-```
-
-### Code Quality
-
-```bash
-black app/
-flake8 app/
-mypy app/
-```
-
----
 
 ## 📄 License
 
-© 2024 Fahad Khan. All rights reserved.
+© 2026 Himanshu Kumar. All rights reserved.
 
 ---
 
@@ -460,8 +435,7 @@ mypy app/
 ## 📞 Contact
 
 - **Email**: himanshukumarsingh454@gmail.com
-- **GitHub Issues**: [Create an issue](https://github.com/yourusername/zentra/issues)
-- **Documentation**: http://127.0.0.1:8000/scalar
+
 
 ---
 
