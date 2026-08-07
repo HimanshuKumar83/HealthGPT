@@ -27,3 +27,14 @@ zentra-backend/__pycache__/
 # Frontend specific
 zentra-ui/node_modules/
 zentra-ui/dist/
+
+# Ignore documentation and presentation folders
+
+docs/
+
+presentation/
+
+report/
+
+testing/
+
