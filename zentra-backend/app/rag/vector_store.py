@@ -1,5 +1,4 @@
 import os
-from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_chroma import Chroma
 from app.core.config import settings
 
@@ -8,18 +7,25 @@ EMBEDDING_TYPE = os.getenv("EMBEDDING_TYPE", "huggingface" if settings.ENVIRONME
 
 if EMBEDDING_TYPE == "google":
     from langchain_google_genai import GoogleGenerativeAIEmbeddings
+    embedding_model = os.getenv("GEMINI_EMBEDDING_MODEL", "models/text-embedding-004")
     embeddings = GoogleGenerativeAIEmbeddings(
-        model="models/embedding-001",
+        model=embedding_model,
         google_api_key=settings.GEMINI_API_KEY
     )
     CHROMA_PATH = os.getenv("CHROMA_PATH", "chroma_db")
     COLLECTION_NAME = os.getenv("CHROMA_COLLECTION", "health_knowledge")
-    print("Initializing ChromaDB with Google Generative AI Embeddings")
+    print(f"Initializing ChromaDB with Google Generative AI Embeddings ({embedding_model})")
 else:
     from langchain_huggingface import HuggingFaceEmbeddings
-    embeddings = HuggingFaceEmbeddings(
-        model_name="sentence-transformers/all-MiniLM-L6-v2"
-    )
+    try:
+        embeddings = HuggingFaceEmbeddings(
+            model_name="sentence-transformers/all-MiniLM-L6-v2",
+            model_kwargs={"local_files_only": True}
+        )
+    except Exception:
+        embeddings = HuggingFaceEmbeddings(
+            model_name="sentence-transformers/all-MiniLM-L6-v2"
+        )
     CHROMA_PATH = os.getenv("CHROMA_PATH", "data/chroma_db")
     COLLECTION_NAME = os.getenv("CHROMA_COLLECTION", "fitness_knowledge")
     print(f"Initializing ChromaDB with Local HuggingFace Embeddings at {CHROMA_PATH} (Collection: {COLLECTION_NAME})")

@@ -15,7 +15,6 @@ from app.schemas.chat import (
     UpdateSessionTitleRequest,
 )
 from app.api.auth_router import get_current_user
-from app.rag import chat as rag_chat
 
 router = APIRouter(prefix="/chat", tags=["Chat"])
 
@@ -159,6 +158,7 @@ async def send_message(
         for msg in messages_result.scalars().all()
     ]
 
+    from app.rag import chat as rag_chat
     ai_response = await rag_chat(
         session_id=str(session_id),
         message=request.message,
@@ -186,7 +186,6 @@ async def send_message(
 
 
 from fastapi.responses import StreamingResponse
-from app.rag.rag_chain import stream_chat
 import json
 
 @router.post("/sessions/{session_id}/stream")
@@ -196,6 +195,7 @@ async def stream_message(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ):
+    from app.rag.rag_chain import stream_chat
     # Verify session
     result = await db.execute(
         select(ChatSession).where(

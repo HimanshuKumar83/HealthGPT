@@ -1,11 +1,14 @@
+import os
 import logging
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 from app.rag.vector_store import retriever
 from app.core.config import settings
 
+GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
+
 llm = ChatGoogleGenerativeAI(
-    model="gemini-2.5-flash",
+    model=GEMINI_MODEL,
     google_api_key=settings.GEMINI_API_KEY,
     temperature=0.7,
     streaming=True

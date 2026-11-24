@@ -5,6 +5,7 @@ scalar-fastapi==1.0.3
 
 # Database
 sqlalchemy[asyncio]==2.0.36
+aiosqlite==0.20.0
 # Using psycopg3 (has Python 3.13 wheels)
 psycopg[binary]==3.2.3
 # asyncpg==0.30.0  # Temporarily disabled - needs C++ compiler on Windows with Python 3.13

@@ -2,15 +2,21 @@ from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sess
 from sqlalchemy.orm import declarative_base
 from app.core.config import settings #type: ignore
 
-# Convert PostgreSQL URL to async version (postgresql:// -> postgresql+psycopg://)
-DATABASE_URL = str(settings.DATABASE_URL).replace(
-    "postgresql://", "postgresql+psycopg://"
-)
+# Ensure the database URL uses the async driver (psycopg for PostgreSQL, aiosqlite for SQLite)
+raw_url = str(settings.DATABASE_URL)
+if raw_url.startswith("postgres://"):
+    DATABASE_URL = raw_url.replace("postgres://", "postgresql+psycopg://", 1)
+elif raw_url.startswith("postgresql://") and not raw_url.startswith("postgresql+psycopg://"):
+    DATABASE_URL = raw_url.replace("postgresql://", "postgresql+psycopg://", 1)
+elif raw_url.startswith("sqlite://") and not raw_url.startswith("sqlite+aiosqlite://"):
+    DATABASE_URL = raw_url.replace("sqlite://", "sqlite+aiosqlite://", 1)
+else:
+    DATABASE_URL = raw_url
 
 
 engine = create_async_engine(
     DATABASE_URL,
-    echo=True,
+    echo=False if settings.ENVIRONMENT == "production" else True,
     future=True
 )
 
