@@ -7,13 +7,13 @@ EMBEDDING_TYPE = os.getenv("EMBEDDING_TYPE", "huggingface" if settings.ENVIRONME
 
 if EMBEDDING_TYPE == "google":
     from langchain_google_genai import GoogleGenerativeAIEmbeddings
-    embedding_model = os.getenv("GEMINI_EMBEDDING_MODEL", "models/text-embedding-004")
+    embedding_model = os.getenv("GEMINI_EMBEDDING_MODEL", "models/gemini-embedding-001")
     embeddings = GoogleGenerativeAIEmbeddings(
         model=embedding_model,
         google_api_key=settings.GEMINI_API_KEY
     )
-    CHROMA_PATH = os.getenv("CHROMA_PATH", "chroma_db")
-    COLLECTION_NAME = os.getenv("CHROMA_COLLECTION", "health_knowledge")
+    CHROMA_PATH = os.getenv("GOOGLE_CHROMA_PATH", "chroma_db_google")
+    COLLECTION_NAME = os.getenv("GOOGLE_CHROMA_COLLECTION", "health_knowledge_google")
     print(f"Initializing ChromaDB with Google Generative AI Embeddings ({embedding_model})")
 else:
     from langchain_huggingface import HuggingFaceEmbeddings

@@ -2,7 +2,7 @@ import os
 import logging
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
-from app.rag.vector_store import retriever
+from app.rag.vector_store import retriever, vector_store
 from app.core.config import settings
 
 GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
@@ -41,7 +41,16 @@ def _format_docs(docs) -> str:
 
 
 async def _build_messages(message: str, history: list = None, user_profile=None):
-    docs = await retriever.ainvoke(message)
+    docs = []
+    try:
+        collection = getattr(vector_store, "_collection", None)
+        # Avoid slow API embeddings if the database is empty or not indexed
+        if collection is not None and collection.count() > 0:
+            docs = await retriever.ainvoke(message)
+    except Exception as e:
+        logging.warning(f"Retrieval skipped or failed: {e}")
+        docs = []
+
     context = _format_docs(docs)
     profile_context = ""
 

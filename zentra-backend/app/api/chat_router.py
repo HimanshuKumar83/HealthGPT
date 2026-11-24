@@ -242,7 +242,15 @@ async def stream_message(
             await new_db_session.commit()
             yield f"data: [DONE]\n\n"
 
-    return StreamingResponse(event_generator(), media_type="text/event-stream")
+    return StreamingResponse(
+        event_generator(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "X-Accel-Buffering": "no",
+        },
+    )
 
 
 @router.patch("/sessions/{session_id}/title", response_model=ChatSessionSummary)
