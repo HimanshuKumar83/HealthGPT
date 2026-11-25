@@ -129,10 +129,15 @@ function extractError(err: unknown): string {
         }
         // Axios response error — FastAPI detail field
         if ("response" in err) {
-            const axiosErr = err as { response?: { data?: { detail?: string | { msg: string }[] } } };
+            const axiosErr = err as { response?: { data?: { detail?: string | { msg: string }[]; message?: string } } };
             const detail = axiosErr.response?.data?.detail;
             if (typeof detail === "string") return detail;
             if (Array.isArray(detail)) return detail.map((d) => d.msg).join(", ");
+            const message = axiosErr.response?.data?.message;
+            if (typeof message === "string") return message;
+        }
+        if ("message" in err && typeof (err as { message: unknown }).message === "string") {
+            return (err as { message: string }).message;
         }
     }
     return "Something went wrong. Please try again.";
