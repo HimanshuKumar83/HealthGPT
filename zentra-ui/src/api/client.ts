@@ -34,7 +34,10 @@ apiClient.interceptors.request.use(
 apiClient.interceptors.response.use(
     (response) => response,
     (error) => {
-        if (error.response?.status === 401) {
+        const isAuthRoute =
+            window.location.pathname === "/login" ||
+            window.location.pathname === "/register";
+        if (error.response?.status === 401 && !isAuthRoute) {
             // Clear stored token and redirect to login
             localStorage.removeItem("access_token");
             localStorage.removeItem("user");
